@@ -1,0 +1,3053 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<scene version="0.5.0">
+
+	<!--##### DEFAULT PARAMETERS #####--> 
+
+	<default name="integrator" value="gpt"/>
+	<default name="shutterOpen" value="0"/>
+	<default name="shutterClose" value="0.5"/>
+	<default name="seed" value="0"/>
+	<default name="seed_xoffset" value="0"/>			<!-- by how much should the seed be shifted along the x axis? -->
+	<default name="seed_yoffset" value="0"/>			<!-- by how much should the seed be shifted along the y axis? -->
+	<default name="spp" value="128"/>
+	<default name="disableGradients" value="false"/>
+	<default name="xoffset" value="0"/>
+	<default name="yoffset" value="0"/>
+	<default name="xsize" value="1280"/>
+	<default name="ysize" value="720"/>
+	<default name="full_xsize" value="1280"/>
+	<default name="full_ysize" value="720"/>
+	<default name="sampler" value="deterministic"/>
+	<default name="recfilter" value="mitchell"/>	
+	<default name="isBase" value="true"/>				<!-- is the current render-pass the base pass? -->
+	<default name="useAdaptive" value="false"/>			<!-- do we use adaptive sampling? -->
+	<default name="samplingIterations" value="4"/>		<!-- how many adaptive sampling iterations are used? -->
+	<default name="useMotionVectors" value="false"/>	<!-- do we use motion vectors for time offsets? -->
+	<default name="isTimeOffset" value="false"/>		<!-- is the current render-pass a time-offset pass? -->
+	<default name="apertureRadius" value="0.0"/>
+	<default name="focusDistance" value="1.0"/>
+	
+	
+	<!--##### SETUP #####--> 
+	
+	<integrator type="$integrator">
+		<boolean name="strictNormals" value="true"/>
+		<integer name="maxDepth" value="6"/>
+		<integer name="rrDepth" value="12"/>
+		<integer name="seed" value="$seed"/>	
+		<integer name="seed_xoffset" value="$seed_xoffset"/>
+		<integer name="seed_yoffset" value="$seed_yoffset"/>		
+		<boolean name="isBase" value="$isBase"/>		
+		<boolean name="useAdaptive" value="$useAdaptive"/>
+		<integer name="samplingIterations" value="$samplingIterations"/>	
+		<boolean name="useMotionVectors" value="$useMotionVectors"/>
+		<boolean name="isTimeOffset" value="$isTimeOffset"/>		
+		<boolean name="disableGradients" value="$disableGradients"/>	
+	</integrator>
+	
+	<sensor type="thinlens">
+		<float name="apertureRadius" value="$apertureRadius"/>
+		<float name="focusDistance" value="$focusDistance"/>
+		<float name="shutterOpen" value="$shutterOpen"/>
+		<float name="shutterClose" value="$shutterClose"/>
+		
+		<float name="fov" value="60"/>
+		<string name="fovAxis" value="x"/>
+
+		<animation name="toWorld">
+			<transform time="0">
+				<lookat  origin="700, 1200, -35" target="699, 1198, -35" up="0, 1, 0"/>
+			</transform>
+			<transform time="240">
+				<lookat  origin="-800, 200, -35" target="-801, 200, -35" up="0, 1, 0"/>
+			</transform>
+		</animation>
+		
+		<sampler type="$sampler">
+			<integer name="sampleCount" value="$spp"/>
+		</sampler>
+
+		<film type="multifilm">
+			<integer name="cropOffsetX" value="$xoffset"/>
+			<integer name="cropOffsetY" value="$yoffset"/>
+			<integer name="cropWidth" value="$xsize"/>
+			<integer name="cropHeight" value="$ysize"/>
+			<integer name="width" value="$full_xsize"/>
+			<integer name="height" value="$full_ysize"/>
+			<rfilter type="$recfilter"/>
+			<string name="fileFormat" value="openexr"/>
+		</film>
+	</sensor>
+	
+	<!-- 
+	#################################################################################################
+	##################################### SCENE DESCRIPTION #########################################
+	#################################################################################################	
+	-->
+	
+	<emitter type="sunsky">
+		<float name="sunScale" value="9"/>
+		<float name="skyScale" value="9"/>
+		<float name="hour" value="10"/>
+		<float name="turbidity" value="10"/>
+	</emitter>
+
+<!--	<bsdf type="mask" id="leaf_material">
+		<texture name="opacity" type="bitmap" id="sponza_thorn_mask.tga">
+			<string name="filename" value="textures/sponza_thorn_mask.png"/>
+		</texture>
+
+		<bsdf type="diffuse">
+			<texture name="reflectance" type="bitmap" id="sponza_thorn_diff.tga">
+				<string name="filename" value="textures/sponza_thorn_diff.tga"/>
+			</texture>
+		</bsdf>
+	</bsdf>
+-->
+	<bsdf type="diffuse" id="leaf_material">
+		<texture name="reflectance" type="bitmap" id="sponza_thorn_diff.tga">
+			<string name="filename" value="textures/sponza_thorn_diff.tga"/>
+		</texture>
+	</bsdf>
+<!-- -->		
+		
+	<bsdf type="diffuse" id="vase_round_material">
+		<texture name="reflectance" type="bitmap" id="vase_round.tga">
+			<string name="filename" value="textures/vase_round.tga"/>
+		</texture>
+	</bsdf>
+<!--
+	<bsdf type="mask" id="Material__57_material">
+		<texture name="opacity" type="bitmap" id="vase_plant_mask.tga">
+			<string name="filename" value="textures/vase_plant_mask.png"/>
+		</texture>
+
+		<bsdf type="diffuse">
+			<texture name="reflectance" type="bitmap" id="vase_plant.tga">
+				<string name="filename" value="textures/vase_plant.tga"/>
+			</texture>
+		</bsdf>
+	</bsdf>
+-->
+	<bsdf type="diffuse" id="Material__57_material">
+		<texture name="reflectance" type="bitmap" id="vase_plant.tga">
+			<string name="filename" value="textures/vase_plant.tga"/>
+		</texture>
+	</bsdf>
+<!-- -->	
+		
+	<bsdf type="diffuse" id="Material__298_material">
+		<texture name="reflectance" type="bitmap" id="background.tga">
+			<string name="filename" value="textures/background.tga"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="16___Default_material">
+		<texture name="reflectance" type="bitmap" id="gi_flag.tga">
+			<string name="filename" value="textures/gi_flag.tga"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="bricks_material">
+		<texture name="reflectance" type="bitmap" id="spnza_bricks_a_diff.tga">
+			<string name="filename" value="textures/spnza_bricks_a_diff.tga"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="arch_material">
+		<texture name="reflectance" type="bitmap" id="sponza_arch_diff.tga">
+			<string name="filename" value="textures/sponza_arch_diff.tga"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="ceiling_material">
+		<texture name="reflectance" type="bitmap" id="sponza_ceiling_a_diff.tga">
+			<string name="filename" value="textures/sponza_ceiling_a_diff.tga"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="column_a_material">
+		<texture name="reflectance" type="bitmap" id="sponza_column_a_diff.tga">
+			<string name="filename" value="textures/sponza_column_a_diff.tga"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="floor_material">
+		<texture name="reflectance" type="bitmap" id="sponza_floor_a_diff.tga">
+			<string name="filename" value="textures/sponza_floor_a_diff.tga"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="column_c_material">
+		<texture name="reflectance" type="bitmap" id="sponza_column_c_diff.tga">
+			<string name="filename" value="textures/sponza_column_c_diff.tga"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="details_material">
+		<texture name="reflectance" type="bitmap" id="sponza_details_diff.tga">
+			<string name="filename" value="textures/sponza_details_diff.tga"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="column_b_material">
+		<texture name="reflectance" type="bitmap" id="sponza_column_b_diff.tga">
+			<string name="filename" value="textures/sponza_column_b_diff.tga"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="Material__47_material">
+		<rgb name="reflectance" value="0.30472 0.30472 0.30472"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="flagpole_material">
+		<texture name="reflectance" type="bitmap" id="sponza_flagpole_diff.tga">
+			<string name="filename" value="textures/sponza_flagpole_diff.tga"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="fabric_e_material">
+		<texture name="reflectance" type="bitmap" id="sponza_fabric_green_diff.tga">
+			<string name="filename" value="textures/sponza_fabric_green_diff.tga"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="fabric_d_material">
+		<texture name="reflectance" type="bitmap" id="sponza_fabric_blue_diff.tga">
+			<string name="filename" value="textures/sponza_fabric_blue_diff.tga"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="fabric_a_material">
+		<texture name="reflectance" type="bitmap" id="sponza_fabric_diff.tga">
+			<string name="filename" value="textures/sponza_fabric_diff.tga"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="fabric_g_material">
+		<texture name="reflectance" type="bitmap" id="sponza_curtain_blue_diff.tga">
+			<string name="filename" value="textures/sponza_curtain_blue_diff.tga"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="fabric_c_material">
+		<texture name="reflectance" type="bitmap" id="sponza_curtain_diff.tga">
+			<string name="filename" value="textures/sponza_curtain_diff.tga"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="fabric_f_material">
+		<texture name="reflectance" type="bitmap" id="sponza_curtain_green_diff.tga">
+			<string name="filename" value="textures/sponza_curtain_green_diff.tga"/>
+		</texture>
+	</bsdf>
+
+<!--	
+	<bsdf type="mask" id="chain_material">
+		<texture name="opacity" type="bitmap" id="chain_texture_mask.tga">
+			<string name="filename" value="textures/chain_texture_mask.png"/>
+		</texture>
+
+		<bsdf type="diffuse">
+			<texture name="reflectance" type="bitmap" id="chain_texture.tga">
+				<string name="filename" value="textures/chain_texture.tga"/>
+			</texture>
+		</bsdf>
+	</bsdf>
+-->
+
+	<bsdf type="diffuse" id="chain_material">
+		<texture name="reflectance" type="bitmap" id="chain_texture.tga">
+			<string name="filename" value="textures/chain_texture.tga"/>
+		</texture>
+	</bsdf>
+<!-- -->		
+	<bsdf type="diffuse" id="vase_hanging_material">
+		<texture name="reflectance" type="bitmap" id="vase_hanging.tga">
+			<string name="filename" value="textures/vase_hanging.tga"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="vase_material">
+		<texture name="reflectance" type="bitmap" id="vase_dif.tga">
+			<string name="filename" value="textures/vase_dif.tga"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="Material__25_material">
+		<texture name="reflectance" type="bitmap" id="lion.tga">
+			<string name="filename" value="textures/lion.tga"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="roof_material">
+		<texture name="reflectance" type="bitmap" id="sponza_roof_diff.tga">
+			<string name="filename" value="textures/sponza_roof_diff.tga"/>
+		</texture>
+	</bsdf>
+<!--
+	<shape type="serialized" id="sponza_00_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="0"/>
+
+		<ref name="bsdf" id="leaf_material"/>
+	</shape>
+-->
+	<!--
+	<shape type="serialized" id="sponza_01_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="1"/>
+
+		<ref name="bsdf" id="Material__57_material"/>
+	</shape>
+-->
+
+	<shape type="serialized" id="sponza_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="2"/>
+
+		<ref name="bsdf" id="vase_round_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_03_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="3"/>
+
+		<ref name="bsdf" id="Material__298_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_05_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="4"/>
+
+		<ref name="bsdf" id="bricks_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_06_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="5"/>
+
+		<ref name="bsdf" id="bricks_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_07_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="6"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_08_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="7"/>
+
+		<ref name="bsdf" id="ceiling_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_09_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="8"/>
+
+		<ref name="bsdf" id="column_a_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_10_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="9"/>
+
+		<ref name="bsdf" id="column_a_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_11_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="10"/>
+
+		<ref name="bsdf" id="column_a_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_12_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="11"/>
+
+		<ref name="bsdf" id="column_a_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_13_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="12"/>
+
+		<ref name="bsdf" id="column_a_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_14_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="13"/>
+
+		<ref name="bsdf" id="column_a_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_15_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="14"/>
+
+		<ref name="bsdf" id="column_a_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_16_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="15"/>
+
+		<ref name="bsdf" id="column_a_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_17_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="16"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_18_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="17"/>
+
+		<ref name="bsdf" id="floor_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_19_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="18"/>
+
+		<ref name="bsdf" id="ceiling_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_20_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="19"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_21_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="20"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_22_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="21"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_23_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="22"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_24_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="23"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_25_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="24"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_26_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="25"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_27_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="26"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_28_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="27"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_29_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="28"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_30_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="29"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_31_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="30"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_32_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="31"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_33_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="32"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_34_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="33"/>
+
+		<ref name="bsdf" id="bricks_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_35_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="34"/>
+
+		<ref name="bsdf" id="ceiling_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_36_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="35"/>
+
+		<ref name="bsdf" id="bricks_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_37_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="36"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_38_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="37"/>
+
+		<ref name="bsdf" id="ceiling_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_39_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="38"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_40_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="39"/>
+
+		<ref name="bsdf" id="ceiling_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_41_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="40"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_42_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="41"/>
+
+		<ref name="bsdf" id="ceiling_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_43_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="42"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_44_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="43"/>
+
+		<ref name="bsdf" id="ceiling_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_45_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="44"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_46_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="45"/>
+
+		<ref name="bsdf" id="ceiling_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_47_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="46"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_48_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="47"/>
+
+		<ref name="bsdf" id="ceiling_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_49_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="48"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_50_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="49"/>
+
+		<ref name="bsdf" id="ceiling_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_51_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="50"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_52_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="51"/>
+
+		<ref name="bsdf" id="ceiling_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_53_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="52"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_54_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="53"/>
+
+		<ref name="bsdf" id="ceiling_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_55_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="54"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_56_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="55"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_57_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="56"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_58_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="57"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_59_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="58"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_60_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="59"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_61_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="60"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_62_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="61"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_63_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="62"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_64_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="63"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_65_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="64"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_66_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="65"/>
+
+		<ref name="bsdf" id="bricks_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_67_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="66"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_68_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="67"/>
+
+		<ref name="bsdf" id="bricks_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_69_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="68"/>
+
+		<ref name="bsdf" id="bricks_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_70_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="69"/>
+
+		<ref name="bsdf" id="details_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_71_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="70"/>
+
+		<ref name="bsdf" id="details_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_0_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="71"/>
+
+		<ref name="bsdf" id="bricks_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_72_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="72"/>
+
+		<ref name="bsdf" id="details_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_1_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="73"/>
+
+		<ref name="bsdf" id="bricks_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_73_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="74"/>
+
+		<ref name="bsdf" id="details_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_74_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="75"/>
+
+		<ref name="bsdf" id="details_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_75_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="76"/>
+
+		<ref name="bsdf" id="bricks_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_76_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="77"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_77_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="78"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_78_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="79"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_79_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="80"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_80_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="81"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_81_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="82"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_82_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="83"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_83_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="84"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_84_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="85"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_85_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="86"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_86_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="87"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_87_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="88"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_88_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="89"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_89_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="90"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_90_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="91"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_91_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="92"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_92_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="93"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_93_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="94"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_94_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="95"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_95_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="96"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_96_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="97"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_97_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="98"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_98_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="99"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_99_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="100"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_100_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="101"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_101_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="102"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_102_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="103"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_103_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="104"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_104_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="105"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_105_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="106"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_106_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="107"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_107_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="108"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_108_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="109"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_109_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="110"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_110_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="111"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_111_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="112"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_112_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="113"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_113_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="114"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_114_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="115"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_115_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="116"/>
+
+		<ref name="bsdf" id="column_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_116_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="117"/>
+
+		<ref name="bsdf" id="bricks_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_117_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="118"/>
+
+		<ref name="bsdf" id="floor_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_118_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="119"/>
+
+		<ref name="bsdf" id="column_a_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_119_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="120"/>
+
+		<ref name="bsdf" id="column_a_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_120_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="121"/>
+
+		<ref name="bsdf" id="column_a_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_121_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="122"/>
+
+		<ref name="bsdf" id="column_a_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_122_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="123"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_123_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="124"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_124_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="125"/>
+
+		<ref name="bsdf" id="arch_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_125_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="126"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_126_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="127"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_127_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="128"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_128_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="129"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_129_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="130"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_130_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="131"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_131_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="132"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_132_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="133"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_133_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="134"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_134_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="135"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_135_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="136"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_136_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="137"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_137_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="138"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_138_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="139"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_139_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="140"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_140_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="141"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_141_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="142"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_142_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="143"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_143_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="144"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_144_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="145"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_145_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="146"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_146_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="147"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_147_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="148"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_148_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="149"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_149_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="150"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_150_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="151"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_151_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="152"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_152_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="153"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_153_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="154"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_154_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="155"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_155_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="156"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_156_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="157"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_157_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="158"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_158_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="159"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_159_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="160"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_160_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="161"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_161_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="162"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_162_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="163"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_163_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="164"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_164_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="165"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_165_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="166"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_166_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="167"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_167_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="168"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_168_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="169"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_169_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="170"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_170_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="171"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_171_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="172"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_172_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="173"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_173_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="174"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_174_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="175"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_175_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="176"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_176_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="177"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_177_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="178"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_178_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="179"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_179_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="180"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_180_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="181"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_181_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="182"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_182_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="183"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_183_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="184"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_184_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="185"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_185_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="186"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_186_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="187"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_187_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="188"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_188_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="189"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_189_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="190"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_190_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="191"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_191_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="192"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_192_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="193"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_193_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="194"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_194_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="195"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_195_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="196"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_196_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="197"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_197_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="198"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_198_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="199"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_199_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="200"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_200_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="201"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_201_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="202"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_202_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="203"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_203_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="204"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_204_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="205"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_205_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="206"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_206_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="207"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_207_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="208"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_208_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="209"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_209_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="210"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_210_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="211"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_211_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="212"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_212_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="213"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_213_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="214"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_214_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="215"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_215_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="216"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_216_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="217"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_217_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="218"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_218_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="219"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_219_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="220"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_220_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="221"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_221_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="222"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_222_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="223"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_223_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="224"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_224_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="225"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_225_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="226"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_226_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="227"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_227_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="228"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_228_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="229"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_229_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="230"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_230_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="231"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_231_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="232"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_232_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="233"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_233_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="234"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_234_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="235"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_235_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="236"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_236_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="237"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_237_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="238"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_238_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="239"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_239_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="240"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_240_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="241"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_241_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="242"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_242_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="243"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_243_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="244"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_244_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="245"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_245_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="246"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_246_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="247"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_247_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="248"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_248_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="249"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_249_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="250"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_250_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="251"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_251_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="252"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_252_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="253"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_253_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="254"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_254_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="255"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_255_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="256"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_256_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="257"/>
+
+		<ref name="bsdf" id="column_b_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_257_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="258"/>
+
+		<ref name="bsdf" id="Material__47_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_258_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="259"/>
+
+		<ref name="bsdf" id="bricks_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_259_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="260"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_260_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="261"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_261_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="262"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_262_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="263"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_263_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="264"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_264_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="265"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_265_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="266"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_266_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="267"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_267_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="268"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_268_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="269"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_269_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="270"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_270_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="271"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_271_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="272"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_272_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="273"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_273_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="274"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_274_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="275"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+<!--
+	<shape type="serialized" id="sponza_275_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="276"/>
+
+		<ref name="bsdf" id="leaf_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_276_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="277"/>
+
+		<ref name="bsdf" id="leaf_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_277_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="278"/>
+
+		<ref name="bsdf" id="leaf_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_278_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="279"/>
+
+		<ref name="bsdf" id="leaf_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_279_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="280"/>
+
+		<ref name="bsdf" id="leaf_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_280_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="281"/>
+
+		<ref name="bsdf" id="leaf_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_281_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="282"/>
+
+		<ref name="bsdf" id="leaf_material"/>
+	</shape>
+-->
+	<shape type="serialized" id="sponza_282_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="283"/>
+
+		<ref name="bsdf" id="fabric_e_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_283_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="284"/>
+
+		<ref name="bsdf" id="fabric_d_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_284_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="285"/>
+
+		<ref name="bsdf" id="fabric_a_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_285_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="286"/>
+
+		<ref name="bsdf" id="fabric_e_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_286_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="287"/>
+
+		<ref name="bsdf" id="fabric_d_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_287_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="288"/>
+
+		<ref name="bsdf" id="fabric_e_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_288_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="289"/>
+
+		<ref name="bsdf" id="fabric_a_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_289_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="290"/>
+
+		<ref name="bsdf" id="fabric_d_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_290_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="291"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_291_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="292"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_292_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="293"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_293_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="294"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_294_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="295"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_295_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="296"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_296_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="297"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_297_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="298"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_298_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="299"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_299_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="300"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_300_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="301"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_301_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="302"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_302_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="303"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_303_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="304"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_304_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="305"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_305_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="306"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_306_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="307"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_307_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="308"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_308_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="309"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_309_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="310"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_310_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="311"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_311_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="312"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_312_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="313"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_313_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="314"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_314_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="315"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_315_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="316"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_316_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="317"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_317_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="318"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_318_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="319"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_319_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="320"/>
+
+		<ref name="bsdf" id="flagpole_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_320_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="321"/>
+
+		<ref name="bsdf" id="fabric_g_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_321_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="322"/>
+
+		<ref name="bsdf" id="fabric_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_322_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="323"/>
+
+		<ref name="bsdf" id="fabric_f_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_323_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="324"/>
+
+		<ref name="bsdf" id="fabric_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_324_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="325"/>
+
+		<ref name="bsdf" id="fabric_f_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_325_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="326"/>
+
+		<ref name="bsdf" id="fabric_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_326_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="327"/>
+
+		<ref name="bsdf" id="fabric_g_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_327_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="328"/>
+
+		<ref name="bsdf" id="fabric_f_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_328_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="329"/>
+
+		<ref name="bsdf" id="fabric_c_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_329_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="330"/>
+
+		<ref name="bsdf" id="fabric_g_material"/>
+	</shape>
+<!--
+	<shape type="serialized" id="sponza_330_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="331"/>
+
+		<ref name="bsdf" id="chain_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_331_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="332"/>
+
+		<ref name="bsdf" id="chain_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_332_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="333"/>
+
+		<ref name="bsdf" id="chain_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_333_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="334"/>
+
+		<ref name="bsdf" id="chain_material"/>
+	</shape>
+-->
+<!--
+	<shape type="serialized" id="sponza_334_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="335"/>
+
+		<ref name="bsdf" id="vase_hanging_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_335_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="336"/>
+
+		<ref name="bsdf" id="vase_hanging_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_336_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="337"/>
+
+		<ref name="bsdf" id="vase_hanging_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_337_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="338"/>
+
+		<ref name="bsdf" id="vase_hanging_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_338_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="339"/>
+
+		<ref name="bsdf" id="vase_hanging_material"/>
+	</shape>
+-->
+<!--
+	<shape type="serialized" id="sponza_339_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="340"/>
+
+		<ref name="bsdf" id="chain_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_340_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="341"/>
+
+		<ref name="bsdf" id="chain_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_341_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="342"/>
+
+		<ref name="bsdf" id="chain_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_342_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="343"/>
+
+		<ref name="bsdf" id="chain_material"/>
+	</shape>
+-->
+<!--
+	<shape type="serialized" id="sponza_343_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="344"/>
+
+		<ref name="bsdf" id="vase_hanging_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_344_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="345"/>
+
+		<ref name="bsdf" id="vase_hanging_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_345_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="346"/>
+
+		<ref name="bsdf" id="vase_hanging_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_346_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="347"/>
+
+		<ref name="bsdf" id="vase_hanging_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_347_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="348"/>
+
+		<ref name="bsdf" id="vase_hanging_material"/>
+	</shape>
+	-->
+<!--
+	<shape type="serialized" id="sponza_348_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="349"/>
+
+		<ref name="bsdf" id="chain_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_349_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="350"/>
+
+		<ref name="bsdf" id="chain_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_350_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="351"/>
+
+		<ref name="bsdf" id="chain_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_351_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="352"/>
+
+		<ref name="bsdf" id="chain_material"/>
+	</shape>
+-->
+<!--
+	<shape type="serialized" id="sponza_352_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="353"/>
+
+		<ref name="bsdf" id="vase_hanging_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_353_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="354"/>
+
+		<ref name="bsdf" id="vase_hanging_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_354_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="355"/>
+
+		<ref name="bsdf" id="vase_hanging_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_355_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="356"/>
+
+		<ref name="bsdf" id="vase_hanging_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_356_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="357"/>
+
+		<ref name="bsdf" id="vase_hanging_material"/>
+	</shape>
+	-->
+<!--
+	<shape type="serialized" id="sponza_357_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="358"/>
+
+		<ref name="bsdf" id="chain_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_358_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="359"/>
+
+		<ref name="bsdf" id="chain_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_359_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="360"/>
+
+		<ref name="bsdf" id="chain_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_360_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="361"/>
+
+		<ref name="bsdf" id="chain_material"/>
+	</shape>
+-->
+<!--
+	<shape type="serialized" id="sponza_361_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="362"/>
+
+		<ref name="bsdf" id="vase_hanging_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_362_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="363"/>
+
+		<ref name="bsdf" id="vase_hanging_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_363_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="364"/>
+
+		<ref name="bsdf" id="vase_hanging_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_364_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="365"/>
+
+		<ref name="bsdf" id="vase_hanging_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_365_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="366"/>
+
+		<ref name="bsdf" id="vase_hanging_material"/>
+	</shape>
+-->
+	<!--
+	<shape type="serialized" id="sponza_366_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="367"/>
+
+		<ref name="bsdf" id="Material__57_material"/>
+	</shape>
+-->
+
+	<shape type="serialized" id="sponza_2_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="368"/>
+
+		<ref name="bsdf" id="vase_round_material"/>
+	</shape>
+
+	<!--
+	<shape type="serialized" id="sponza_367_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="369"/>
+
+		<ref name="bsdf" id="Material__57_material"/>
+	</shape>
+-->
+	<shape type="serialized" id="sponza_3_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="370"/>
+
+		<ref name="bsdf" id="vase_round_material"/>
+	</shape>
+<!--
+	<shape type="serialized" id="sponza_368_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="371"/>
+
+		<ref name="bsdf" id="Material__57_material"/>
+	</shape>
+-->
+	<shape type="serialized" id="sponza_4_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="372"/>
+
+		<ref name="bsdf" id="vase_round_material"/>
+	</shape>
+<!--
+	<shape type="serialized" id="sponza_369_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="373"/>
+
+		<ref name="bsdf" id="Material__57_material"/>
+	</shape>
+-->
+	<shape type="serialized" id="sponza_5_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="374"/>
+
+		<ref name="bsdf" id="vase_round_material"/>
+	</shape>
+<!--
+	<shape type="serialized" id="sponza_370_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="375"/>
+
+		<ref name="bsdf" id="Material__57_material"/>
+	</shape>
+-->
+	<shape type="serialized" id="sponza_6_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="376"/>
+
+		<ref name="bsdf" id="vase_round_material"/>
+	</shape>
+<!--
+	<shape type="serialized" id="sponza_371_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="377"/>
+
+		<ref name="bsdf" id="Material__57_material"/>
+	</shape>
+-->
+	<shape type="serialized" id="sponza_7_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="378"/>
+
+		<ref name="bsdf" id="vase_round_material"/>
+	</shape>
+<!--
+	<shape type="serialized" id="sponza_372_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="379"/>
+
+		<ref name="bsdf" id="Material__57_material"/>
+	</shape>
+-->
+	<shape type="serialized" id="sponza_8_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="380"/>
+
+		<ref name="bsdf" id="vase_round_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_373_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="381"/>
+
+		<ref name="bsdf" id="vase_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_374_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="382"/>
+
+		<ref name="bsdf" id="vase_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_375_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="383"/>
+
+		<ref name="bsdf" id="vase_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_376_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="384"/>
+
+		<ref name="bsdf" id="vase_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_377_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="385"/>
+
+		<ref name="bsdf" id="Material__25_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_9_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="386"/>
+
+		<ref name="bsdf" id="Material__298_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_378_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="387"/>
+
+		<ref name="bsdf" id="Material__25_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_378a_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="388"/>
+
+		<ref name="bsdf" id="Material__298_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_379_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="389"/>
+
+		<ref name="bsdf" id="bricks_material"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_380_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="390"/>
+
+		<bsdf type="diffuse"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_381_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="391"/>
+
+		<bsdf type="diffuse"/>
+	</shape>
+
+	<shape type="serialized" id="sponza_382_mesh">
+		<string name="filename" value="sponza.serialized"/>
+		<integer name="shapeIndex" value="392"/>
+
+		<ref name="bsdf" id="bricks_material"/>
+	</shape>
+
+</scene>
