@@ -38,7 +38,7 @@ This readme is split in two parts, and the text often refers to the [more detail
 
 ## Licenses
 
-The main NGPT reconstruction code in directory 'reconstruct/' is licensed under a BSD 2-Clause License. See [Full License Information](./readme-detailed.md#full-license-information) for licenses for other included material.
+The main NGPT reconstruction code in directory 'reconstruct/' is licensed under a BSD 2-Clause License. See [Full License Information](./readme-detailed.md#full-license-information) for the exact license and for the licenses of other included material.
 
 
 ## System Requirements
